@@ -2794,12 +2794,14 @@ static ssize_t ro_show(struct device *dev, struct device_attribute *attr, char *
 	return fsg_show_ro(curlun, buf);
 }
 
+/*
 static ssize_t removable_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct fsg_lun		*curlun = fsg_lun_from_dev(dev);
 
 	return fsg_show_removable(curlun, buf);
 }
+*/
 
 static ssize_t nofua_show(struct device *dev, struct device_attribute *attr,
 			  char *buf)
@@ -2836,6 +2838,7 @@ static ssize_t ro_store(struct device *dev, struct device_attribute *attr,
 	return fsg_store_ro(curlun, filesem, buf, count);
 }
 
+/*
 static ssize_t removable_store(struct device *dev, struct device_attribute *attr,
 			   const char *buf, size_t count)
 {
@@ -2843,6 +2846,7 @@ static ssize_t removable_store(struct device *dev, struct device_attribute *attr
 
 	return fsg_store_removable(curlun, buf, count);
 }
+*/
 
 static ssize_t nofua_store(struct device *dev, struct device_attribute *attr,
 			   const char *buf, size_t count)
@@ -2863,10 +2867,12 @@ static ssize_t file_store(struct device *dev, struct device_attribute *attr,
 
 static DEVICE_ATTR_RW(cdrom);
 static DEVICE_ATTR_RW(ro);
-static DEVICE_ATTR_RW(removable);
+//static DEVICE_ATTR_RW(removable);
 static DEVICE_ATTR_RW(nofua);
 static DEVICE_ATTR_RW(file);
 static DEVICE_ATTR(perf, 0644, fsg_show_perf, fsg_store_perf);
+
+static struct device_attribute dev_attr_file_nonremovable = __ATTR_RO(file);
 
 
 
@@ -3014,7 +3020,7 @@ static inline void fsg_common_remove_sysfs(struct fsg_lun *lun)
 	 */
 	device_remove_file(&lun->dev, &dev_attr_cdrom);
 	device_remove_file(&lun->dev, &dev_attr_ro);
-	device_remove_file(&lun->dev, &dev_attr_removable);
+	//device_remove_file(&lun->dev, &dev_attr_removable);
 	device_remove_file(&lun->dev, &dev_attr_file);
 	device_remove_file(&lun->dev, &dev_attr_perf);
 }
@@ -3146,7 +3152,11 @@ static inline int fsg_common_add_sysfs(struct fsg_common *common,
 	rc = device_create_file(&lun->dev, &dev_attr_ro);
 	if (rc)
 		goto error;
-	rc = device_create_file(&lun->dev, &dev_attr_removable);
+	rc = device_create_file(&lun->dev,
+				lun->removable
+			  ? &dev_attr_file
+			  : &dev_attr_file_nonremovable);
+	//rc = device_create_file(&lun->dev, &dev_attr_removable);
 	if (rc)
 		goto error;
 	rc = device_create_file(&lun->dev, &dev_attr_nofua);
