@@ -3063,7 +3063,7 @@ EXPORT_SYMBOL_GPL(fsg_common_free_luns);
 int fsg_common_set_nluns(struct fsg_common *common, int nluns)
 {
 	struct fsg_lun **curlun;
-	nluns = FSG_MAX_LUNS;
+	//nluns = FSG_MAX_LUNS;
 
 	/* Find out how many LUNs there should be */
 	if (nluns < 1 || nluns > FSG_MAX_LUNS) {
@@ -3931,8 +3931,8 @@ void fsg_config_from_params(struct fsg_config *cfg,
 	unsigned i;
 
 	/* Configure LUNs */
-	cfg->nluns = FSG_MAX_LUNS;
-		//min(params->luns ?: (params->file_count ?: 1u),(unsigned)FSG_MAX_LUNS);
+	cfg->nluns = //FSG_MAX_LUNS;
+		min(params->luns ?: (params->file_count ?: 1u),(unsigned)FSG_MAX_LUNS);
 	for (i = 0, lun = cfg->luns; i < cfg->nluns; ++i, ++lun) {
 		lun->ro = !!params->ro[i];
 		lun->cdrom = !!params->cdrom[i];
