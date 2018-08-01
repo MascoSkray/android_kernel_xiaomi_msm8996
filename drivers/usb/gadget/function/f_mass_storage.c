@@ -2837,12 +2837,11 @@ static ssize_t ro_store(struct device *dev, struct device_attribute *attr,
 }
 
 static ssize_t removable_store(struct device *dev, struct device_attribute *attr,
-			const char *buf, size_t count)
+			   const char *buf, size_t count)
 {
 	struct fsg_lun		*curlun = fsg_lun_from_dev(dev);
-	struct rw_semaphore	*filesem = dev_get_drvdata(dev);
 
-	return fsg_store_removable(curlun, filesem, buf, count);
+	return fsg_store_removable(curlun, buf, count);
 }
 
 static ssize_t nofua_store(struct device *dev, struct device_attribute *attr,
@@ -3064,7 +3063,7 @@ EXPORT_SYMBOL_GPL(fsg_common_free_luns);
 int fsg_common_set_nluns(struct fsg_common *common, int nluns)
 {
 	struct fsg_lun **curlun;
-	nluns = FSG_MAX_LUNS
+	nluns = FSG_MAX_LUNS;
 
 	/* Find out how many LUNs there should be */
 	if (nluns < 1 || nluns > FSG_MAX_LUNS) {
@@ -3932,7 +3931,7 @@ void fsg_config_from_params(struct fsg_config *cfg,
 	unsigned i;
 
 	/* Configure LUNs */
-	cfg->nluns = FSG_MAX_LUNS
+	cfg->nluns = FSG_MAX_LUNS;
 		//min(params->luns ?: (params->file_count ?: 1u),(unsigned)FSG_MAX_LUNS);
 	for (i = 0, lun = cfg->luns; i < cfg->nluns; ++i, ++lun) {
 		lun->ro = !!params->ro[i];
