@@ -3155,6 +3155,9 @@ static inline int fsg_common_add_sysfs(struct fsg_common *common,
 	rc = device_create_file(&lun->dev, &dev_attr_removable);
 	if (rc)
 		goto error;
+	rc = device_create_file(&lun->dev, &dev_attr_file);
+	if (rc)
+		goto error;
 	rc = device_create_file(&lun->dev, &dev_attr_nofua);
 	if (rc)
 		goto error;
