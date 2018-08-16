@@ -3831,7 +3831,7 @@ static void fsg_free_inst(struct usb_function_instance *fi)
 
 	opts = fsg_opts_from_func_inst(fi);
 	fsg_common_put(opts->common);
-	kfree(opCDROMKernel-2018/08/16-Oreo-MIUIts);
+	kfree(opts);
 }
 
 static struct usb_function_instance *fsg_alloc_inst(void)
