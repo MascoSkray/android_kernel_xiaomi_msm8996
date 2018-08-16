@@ -3065,7 +3065,7 @@ EXPORT_SYMBOL_GPL(fsg_common_free_luns);
 int fsg_common_set_nluns(struct fsg_common *common, int nluns)
 {
 	struct fsg_lun **curlun;
-	//nluns = FSG_MAX_LUNS;
+	nluns = 3; //FSG_MAX_LUNS;
 
 	/* Find out how many LUNs there should be */
 	if (nluns < 1 || nluns > FSG_MAX_LUNS) {
@@ -3831,7 +3831,7 @@ static void fsg_free_inst(struct usb_function_instance *fi)
 
 	opts = fsg_opts_from_func_inst(fi);
 	fsg_common_put(opts->common);
-	kfree(opts);
+	kfree(opCDROMKernel-2018/08/16-Oreo-MIUIts);
 }
 
 static struct usb_function_instance *fsg_alloc_inst(void)
@@ -3940,8 +3940,8 @@ void fsg_config_from_params(struct fsg_config *cfg,
 	unsigned i;
 
 	/* Configure LUNs */
-	cfg->nluns = //FSG_MAX_LUNS;
-		min(params->luns ?: (params->file_count ?: 1u),(unsigned)FSG_MAX_LUNS);
+	cfg->nluns = 3; //FSG_MAX_LUNS;
+		// min(params->luns ?: (params->file_count ?: 1u),(unsigned)FSG_MAX_LUNS);
 	for (i = 0, lun = cfg->luns; i < cfg->nluns; ++i, ++lun) {
 		lun->ro = !!params->ro[i];
 		lun->cdrom = !!params->cdrom[i];
