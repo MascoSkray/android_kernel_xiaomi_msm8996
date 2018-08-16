@@ -2831,7 +2831,12 @@ static unsigned int fsg_num_buffers = CONFIG_USB_GADGET_STORAGE_NUM_BUFFERS;
 #define fsg_num_buffers	CONFIG_USB_GADGET_STORAGE_NUM_BUFFERS
 #endif /* CONFIG_USB_GADGET_DEBUG_FILES */
 static struct fsg_module_parameters fsg_mod_data = {
-	.luns		= 3
+	.stall		= 1,
+	.luns		= 3,
+	.ro			= {0,0,1},
+	.cdrom		= {0,0,1},
+	.removable	= {1,0,1},
+	.file		= {NULL},
 };
 FSG_MODULE_PARAMETERS(/* no prefix */, fsg_mod_data);
 
