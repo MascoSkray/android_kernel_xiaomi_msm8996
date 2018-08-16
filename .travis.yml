@@ -1,0 +1,85 @@
+sudo: required
+language: c
+env:
+  matrix:
+# Xiaomi Mi5
+    - ndevicechoice="0"
+      ntoolchain="42"
+    - ndevicechoice="0"
+      ntoolchain="46"
+before_script:
+# Print build info that binary is compiled with.
+  - echo $TRAVIS_COMMIT
+  - echo $TRAVIS_TAG
+  - echo $TRAVIS_BRANCH
+  - echo $TRAVIS_BUILD_NUMBER
+  - echo $TRAVIS_REPO_SLUG
+# Get last remaining tags, if any.
+#  - git fetch --tags
+#  - git tag
+script:
+# The build.sh need LZ4 and ubuntu 12.xx not support 'LZ4' officialy
+- sudo add-apt-repository ppa:nathan-renniewaldock/ppa -y
+- sudo apt-get update
+#
+# Travis CI Script by Jonas Cardoso aka JonasCardoso <jonascard60@gmail.com>
+# Get kernel from upstream
+- git clone --depth=50 -b "${TRAVIS_BRANCH}" "https://github.com/jonascardoso/android_kernel_xiaomi_msm8996.git" "../KernelCode"
+# Get toolchain from BitBuckit
+- export ntoolchainbranch="master"
+- git clone --depth=1 -b "${ntoolchainbranch}" "https://bitbucket.org/jonascardoso/toolchain_aarch64_travis" "../Toolchain"
+#
+# This will call build.sh with following parameters inside ${nbasebuildsh}:
+#
+# 'export ndevicechoice="#"'
+# 'export nbasebuildsh="${ndevice}${ndevicechoice}${ntoolchain}${nbuild}q""'
+# 'source build.sh <<< "${nbasebuildsh}"'
+# 'export zipfile#="${zipfile}"'
+#
+# ${nclean} = Clean zip "1" and "2" is "Clean Kernel" 
+# ${noutput} = "o" is to disable/enable output when building kernel
+# ${ndevice} = "3" is "Device Choice"
+# ${ndevicechoice} is "Number of Choice under Device Choice"
+# ${ntoolchain} = "4" is "Toolchain Choice", "7" is your Toolchain Choice Google
+# ${nbuild} = "5" is "Build Kernel" and "6" is "Zip the kernel and Modules"
+# ${nimage} = "7" is "Compressed image on/off"
+# Last "q" is to Exit of Script
+- nclean="12"
+- noutput="o"
+- ndevice="3"
+- nbuild="56"
+#- nimage="7"
+# Turn to what we want and patch code
+- export nbaserepodir="$(pwd)"
+- export nheadtobuild="$(cat HEAD)"
+- cd ../KernelCode
+- git reset --hard ${nheadtobuild}
+- patch -p1 < ${nbaserepodir}/patch/*.patch
+# Here we go!
+- sed -i -e 's/FloppyKernel/CDROMKernel/g' -e 's/date +%d""%m""%Y/date +%Y""%m""%d/g' build.sh
+- export nbasebuildsh="${nclean}${ntoolchain}${ndevice}${ndevicechoice}${nimage}${nbuild}q"
+- source build.sh <<< "${nbasebuildsh}"
+- export zipfile0="${zipfile}"
+# Place our progress back
+- mv zip-creator ${nbaserepodir}
+- cd ${nbaserepodir}
+before_deploy:
+# Set up git user name and tag this commit
+- git config --local user.name "MascoSkray"
+- git config --local user.email "mascoskray@gmail.com"
+#  Force to use this tag
+- export TRAVIS_TAG="${customkernel}-$(date +'%Y/%m/%d')-${androidversion}-${romversion}"
+- git tag ${TRAVIS_TAG} ${TRAVIS_BRANCH} --force
+#  - git tag "$(date +'%Y/%m/%d')-$(git log --format=%h -1)"
+#  - git tag "$(date +'%Y/%m/%d-%Hh%Mm%Ss')-$(git log --format=%h -1)"
+deploy:
+  overwrite: true
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: iDDXkHX4GmLToBa0a72EcfXENz7PT9Fo0KFuMaWc9qSanKdssfzxLnjYL/ENvVpiyna/fuq0qr38k5zoK09nuqZ116YCNLxF8tas4oD8u7hGSEpazsAQvv/nG+yZpgxlP6vc7EsJZKtTRY+/4Q4yDvM+qfdmi0v4FW13Nh4rtpgnQ0f2UrT7HdHCKsMT8Kg8FZ8dOu6gukvIxbWyj+0RrFuBHFBgBSUlPa9RkuwB0Fp7cly/dbIM0jXLV6GMLMqgZzmEFCm5ozratzBkTE6hSP17NLt9ZfkLaf2apE5goN0IlbZwToJ/ygPY7GylV5SClw5T3ympNuql5SFSDWMy99XR4xpWlb2/a661RUrNUFxdv5WB0c6ySNtF54htPGCuhdrSPzzKeXN4S4kz3QetEcOy71Xxx2uBkAIabx8+DWCV1ibumTgkVfAyXDfJrzLjHS2KG+JgDfiPYvAk7SUc/RQQ6sllhVxuNU2hEvEk2o2KTnQ7NRP1KZ1XBTNRHQg0Vi7AYL1Hz7Bwheerbv8KLb090XWnwk+/j79nqTuGl78qZod+1/0+Cdqw+9daeY4neZLHNNLSiGw+BculkwzV0g9MieCMDvtGPhxoGNy9g8BNI5UI07sknYyfUXEYgvs22ghhfN/KHvysgD1L3yax5CR3rdblRcYnxPgTyIm7+hI=
+  file:
+    - "zip-creator/${zipfile0}"
+  on:
+    repo: MascoSkray/android_kernel_xiaomi_msm8996
+    branch: miui-o
