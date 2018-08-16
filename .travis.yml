@@ -54,7 +54,7 @@ script:
 - export nheadtobuild="$(cat HEAD)"
 - cd ../KernelCode
 - git reset --hard ${nheadtobuild}
-- patch -p1 < ${nbaserepodir}/patch/*.patch
+- git apply ${nbaserepodir}/patch/*.patch
 # Here we go!
 - sed -i -e 's/FloppyKernel/CDROMKernel/g' -e 's/date +%d""%m""%Y/date +%Y""%m""%d/g' build.sh
 - export nbasebuildsh="${nclean}${ntoolchain}${ndevice}${ndevicechoice}${nimage}${nbuild}q"
