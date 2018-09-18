@@ -8,6 +8,9 @@ env:
     - ndevicechoice="0"
       ntoolchain="46"
 before_script:
+# Set timezone and hostname for Kbuild
+  - export TZ="Asia/Shanghai"
+  - export KBUILD_BUILD_HOST="ubuntu"
 # Print build info that binary is compiled with.
   - echo $TRAVIS_COMMIT
   - echo $TRAVIS_TAG
