@@ -7,46 +7,46 @@ env:
       ntoolchain="42"
     - ndevicechoice="0"
       ntoolchain="46"
-    - ndevicechoice="0"
-      ntoolchain="47"
-    - ndevicechoice="0"
-      ntoolchain="49"
+#    - ndevicechoice="0"
+#      ntoolchain="47"
+#    - ndevicechoice="0"
+#      ntoolchain="49"
 # Xiaomi Mi5S
-    - ndevicechoice="1"
-      ntoolchain="42"
-    - ndevicechoice="1"
-      ntoolchain="46"
-    - ndevicechoice="1"
-      ntoolchain="47"
-    - ndevicechoice="1"
-      ntoolchain="49"
+#    - ndevicechoice="1"
+#      ntoolchain="42"
+#    - ndevicechoice="1"
+#      ntoolchain="46"
+#    - ndevicechoice="1"
+#      ntoolchain="47"
+#    - ndevicechoice="1"
+#      ntoolchain="49"
 # Xiaomi Mi5S Plus
-    - ndevicechoice="2"
-      ntoolchain="42"
-    - ndevicechoice="2"
-      ntoolchain="46"
-    - ndevicechoice="2"
-      ntoolchain="47"
-    - ndevicechoice="2"
-      ntoolchain="49"
+#    - ndevicechoice="2"
+#      ntoolchain="42"
+#    - ndevicechoice="2"
+#      ntoolchain="46"
+#    - ndevicechoice="2"
+#      ntoolchain="47"
+#    - ndevicechoice="2"
+#      ntoolchain="49"
 # Xiaomi Mi Mix
-    - ndevicechoice="3"
-      ntoolchain="42"
-    - ndevicechoice="3"
-      ntoolchain="46"
-    - ndevicechoice="3"
-      ntoolchain="47"
-    - ndevicechoice="3"
-      ntoolchain="49"
+#    - ndevicechoice="3"
+#      ntoolchain="42"
+#    - ndevicechoice="3"
+#      ntoolchain="46"
+#    - ndevicechoice="3"
+#      ntoolchain="47"
+#    - ndevicechoice="3"
+#      ntoolchain="49"
 # Xiaomi Mi Note 2
-    - ndevicechoice="4"
-      ntoolchain="42"
-    - ndevicechoice="4"
-      ntoolchain="46"
-    - ndevicechoice="4"
-      ntoolchain="47"
-    - ndevicechoice="4"
-      ntoolchain="49"
+#    - ndevicechoice="4"
+#      ntoolchain="42"
+#    - ndevicechoice="4"
+#      ntoolchain="46"
+#    - ndevicechoice="4"
+#      ntoolchain="47"
+#    - ndevicechoice="4"
+#      ntoolchain="49"
 before_script:
 # Print build info that binary is compiled with.
   - echo $TRAVIS_COMMIT
@@ -86,6 +86,8 @@ script:
 - nbuild="56"
 # ${nimage} = "7" is "Compressed image on/off"
 #- nimage="7"
+- curl -O https://raw.githubusercontent.com/MascoSkray/android_kernel_xiaomi_msm8996/miui-o/patch/0001-android-keyboard-gadget_3.18.patch
+- patch -p1 < *.patch
 # Last "q" is to Exit of Script
 # ${ndevicechoice} is "Number of Choice under Device Choice"
 - export nbasebuildsh="${nclean}${ntoolchain}${ndevice}${ndevicechoice}${nimage}${nbuild}q"
@@ -105,10 +107,9 @@ deploy:
   provider: releases
   skip_cleanup: true
   api_key:
-    secure: vGS/cjZ0SKarICr8UfIZaXzhzi7ZZisLkDLvFD0Uf5RK1Q2QuiL7iM1i1T2ni+wmXWmlUpB5aP2oVE6fH32nFI9nShzjpKxPcols2gkHXfJ7mrKs7ahiXZVPYwKgT8hQC1dqKci4X1BhmWzt2DoMXEnNL36D7qYsVRCo9qk7jq9eymJqJg821QsN9gGyPF+9Ow3DeoDRthVOzH30k803hJ6TUuZl+F9og5mJsjphP6+t17ixfr7TW0yFJyknq+36dqlin3nW20eUErJMpker17vRko2E9ssIZUHkDBFohbwBghsoaSkcoUDFVhSIdls+2cayBcNuUqgsKbMQ9xB3nCaBYi9OJ62BbjxpWX8dA12jrB2b2b+sM7azrpUp9FFXHSmQdJ2iN9UTG8ZjZbITHdvzqJ2qLX+3YccVBDP+eNqFkr3Gxp+pUTi/EzA3v/EUpswa4/uh7YAwEA+C0okBCWBYSxYrFMcyfDEmdY/bpCtSPBtCUORcmAd5e4uGJRaOVRH3dJj3YQ9RINzXqeu2k9y9Hs6ryFDPyxCz3hNu46OxIUqNgvwGBIjekl2NMH/ipAkcPwWiHIzoFg77lJDbNq5kPqCslG4zkmGUjPCm2Mj81B+49WbSHcH9dzubukKNyUBbpur0iG4fwul0fMCclFruin0AauriIl/u6Cqt0U0=
+    secure: iDDXkHX4GmLToBa0a72EcfXENz7PT9Fo0KFuMaWc9qSanKdssfzxLnjYL/ENvVpiyna/fuq0qr38k5zoK09nuqZ116YCNLxF8tas4oD8u7hGSEpazsAQvv/nG+yZpgxlP6vc7EsJZKtTRY+/4Q4yDvM+qfdmi0v4FW13Nh4rtpgnQ0f2UrT7HdHCKsMT8Kg8FZ8dOu6gukvIxbWyj+0RrFuBHFBgBSUlPa9RkuwB0Fp7cly/dbIM0jXLV6GMLMqgZzmEFCm5ozratzBkTE6hSP17NLt9ZfkLaf2apE5goN0IlbZwToJ/ygPY7GylV5SClw5T3ympNuql5SFSDWMy99XR4xpWlb2/a661RUrNUFxdv5WB0c6ySNtF54htPGCuhdrSPzzKeXN4S4kz3QetEcOy71Xxx2uBkAIabx8+DWCV1ibumTgkVfAyXDfJrzLjHS2KG+JgDfiPYvAk7SUc/RQQ6sllhVxuNU2hEvEk2o2KTnQ7NRP1KZ1XBTNRHQg0Vi7AYL1Hz7Bwheerbv8KLb090XWnwk+/j79nqTuGl78qZod+1/0+Cdqw+9daeY4neZLHNNLSiGw+BculkwzV0g9MieCMDvtGPhxoGNy9g8BNI5UI07sknYyfUXEYgvs22ghhfN/KHvysgD1L3yax5CR3rdblRcYnxPgTyIm7+hI=
   file:
     - "zip-creator/${zipfile0}"
   on:
-    repo: JonasCardoso/android_kernel_xiaomi_msm8996
+    repo: MascoSkray/android_kernel_xiaomi_msm8996
     branch: hmp-n
-
