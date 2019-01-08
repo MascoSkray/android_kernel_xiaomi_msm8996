@@ -59,7 +59,7 @@ script:
 - git reset --hard ${nheadtobuild}
 - cat ${nbaserepodir}/patch/*.patch | patch -p1
 # Here we go!
-- sed -i -e 's/FLOPPY/CDROM/g' -e 's/by JonasCardoso/by JonasCardoso, MascoSkray modified./g' zip-creator/base/META-INF/com/google/android/update-binary
+- sed -i -e 's/FLOPPY/CDROM/g' -e 's/$maintainer/JonasCardoso, MascoSkray modified./g' zip-creator/base/META-INF/com/google/android/update-binary
 - sed -i -e 's/FloppyKernel/CDROMKernel/g' -e 's/JonasCardoso/MascoSkray/g' zip-creator/base/ramdisk/init.spectrum.rc arch/arm64/configs/*_defconfig
 - sed -i -e 's/FloppyKernel/CDROMKernel/g' -e 's/date +%d""%m""%Y/date +%Y""%m""%d/g' -e 's/date +%d"\/"%m"\/"%Y/date +%Y"\/"%m"\/"%d/g' build.sh
 - export nbasebuildsh="${nclean}${ntoolchain}${ndevice}${ndevicechoice}${nimage}${nbuild}q"
